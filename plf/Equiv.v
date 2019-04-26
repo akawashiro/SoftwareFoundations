@@ -586,8 +586,8 @@ Definition prog_i : com :=
     X ::= Y + 1
   END)%imp.
 
-Definition equiv_classes : list (list com)
-  (* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition equiv_classes : list (list com) :=
+  [[prog_a];[prog_b];[prog_c;prog_h];[prog_d];[prog_e];[prog_f;prog_g];[prog_i]].
 
 (* Do not modify the following line: *)
 Definition manual_grade_for_equiv_classes : option (nat*string) := None.
@@ -787,7 +787,33 @@ Theorem CSeq_congruence : forall c1 c1' c2 c2',
   cequiv c1 c1' -> cequiv c2 c2' ->
   cequiv (c1;;c2) (c1';;c2').
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros.
+  split; intros.
+  -
+    inversion H1; subst.
+    apply E_Seq with (st' := st'0).
+    +
+      unfold cequiv in H.
+      apply (H st st'0).
+      assumption.
+    +
+      unfold cequiv in H0.
+      apply (H0 st'0 st') in H7.
+      assumption.
+  -
+    inversion H1; subst.
+    apply E_Seq with (st' := st'0).
+    +
+      unfold cequiv in H.
+      apply (H st st'0).
+      assumption.
+    +
+      unfold cequiv in H0.
+      apply (H0 st'0 st').
+      assumption.
+Qed.
+
+
 (** [] *)
 
 (** **** Exercise: 3 stars, standard (CIf_congruence)  *)
@@ -796,7 +822,47 @@ Theorem CIf_congruence : forall b b' c1 c1' c2 c2',
   cequiv (TEST b THEN c1 ELSE c2 FI)
          (TEST b' THEN c1' ELSE c2' FI).
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros.
+  unfold cequiv. split.
+  -
+    intros.
+    inversion H2.
+    *
+      apply E_IfTrue.
+      unfold bequiv in H.
+      rewrite (H st) in H8.
+      rewrite H8.
+      reflexivity.
+      rewrite (H0 st st') in H9.
+      assumption.
+     *
+      apply E_IfFalse.
+      unfold bequiv in H.
+      rewrite (H st) in H8.
+      rewrite H8.
+      reflexivity.
+      rewrite (H1 st st') in H9.
+      assumption.
+  -
+    intros.
+    inversion H2.
+    *
+      apply E_IfTrue.
+      unfold bequiv in H.
+      rewrite (H st).
+      rewrite H8.
+      reflexivity.
+      rewrite (H0 st st').
+      assumption.
+     *
+      apply E_IfFalse.
+      unfold bequiv in H.
+      rewrite (H st).
+      rewrite H8.
+      reflexivity.
+      rewrite (H1 st st').
+      assumption.
+Qed. 
 (** [] *)
 
 (** For example, here are two equivalent programs and a proof of their
@@ -1162,8 +1228,29 @@ Proof.
        become constants after folding *)
       simpl. destruct (n =? n0); reflexivity.
   - (* BLe *)
-    (* FILL IN HERE *) admit.
-  - (* BNot *)
+    assert ((aeval st a1) = (aeval st (fold_constants_aexp a1))).
+    rewrite fold_constants_aexp_sound.
+    reflexivity.
+    assert ((aeval st (fold_constants_aexp a1)) = (aeval st a1)).
+    symmetry.
+    assumption.
+    assert ((aeval st a2) = (aeval st (fold_constants_aexp a2))).
+    rewrite fold_constants_aexp_sound.
+    reflexivity.
+    assert ((aeval st (fold_constants_aexp a2)) = (aeval st a2)).
+    symmetry.
+    assumption.
+    simpl.
+    destruct (fold_constants_aexp a1); destruct (fold_constants_aexp a2); rewrite H; rewrite H1; simpl; try reflexivity.
+    simpl.
+    case (n <=? n0).
+    *
+      simpl.
+      reflexivity.
+    *
+      simpl.
+      reflexivity.
+- (* BNot *)
     simpl. remember (fold_constants_bexp b) as b' eqn:Heqb'.
     rewrite IHb.
     destruct b'; reflexivity.
@@ -1173,7 +1260,7 @@ Proof.
     remember (fold_constants_bexp b2) as b2' eqn:Heqb2'.
     rewrite IHb1. rewrite IHb2.
     destruct b1'; destruct b2'; reflexivity.
-(* FILL IN HERE *) Admitted.
+    Qed.
 (** [] *)
 
 (** **** Exercise: 3 stars, standard (fold_constants_com_sound)  
