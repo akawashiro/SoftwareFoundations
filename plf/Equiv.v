@@ -249,6 +249,7 @@ Proof.
   reflexivity.
 
   assumption.
+ Qed.
 (** [] *)
 
 (** **** Exercise: 3 stars, standard (swap_if_branches)  
@@ -293,6 +294,7 @@ Proof.
   apply E_IfTrue.
   assumption.
   assumption.
+  Qed.
 (** [] *)
 
 (** For [WHILE] loops, we can give a similar pair of theorems.  A loop
@@ -1291,8 +1293,42 @@ Proof.
       apply trans_cequiv with c2; try assumption.
       apply TEST_false; assumption.
   - (* WHILE *)
-    (* FILL IN HERE *) Admitted.
-(** [] *)
+    intros.
+    destruct (fold_constants_bexp b) eqn:Heqb.
+    apply WHILE_true.
+    assert (bequiv b (fold_constants_bexp b)). {
+      apply fold_constants_bexp_sound. }
+    *
+      apply trans_bequiv with (fold_constants_bexp b).
+      apply fold_constants_bexp_sound.
+      rewrite Heqb.
+      simpl.
+      unfold bequiv. intros. reflexivity.
+    *
+      apply WHILE_false.
+      apply trans_bequiv with (fold_constants_bexp b).
+      apply fold_constants_bexp_sound.
+      rewrite Heqb.
+      unfold bequiv. intros. reflexivity.
+    *
+      apply CWhile_congruence.
+      apply trans_bequiv with (fold_constants_bexp b). apply fold_constants_bexp_sound.
+      unfold bequiv. intros. rewrite Heqb. reflexivity. assumption.
+    *
+      apply CWhile_congruence.
+      apply trans_bequiv with (fold_constants_bexp b). apply fold_constants_bexp_sound.
+      unfold bequiv. intros. rewrite Heqb. reflexivity. assumption.
+
+    *
+      apply CWhile_congruence.
+      apply trans_bequiv with (fold_constants_bexp b). apply fold_constants_bexp_sound.
+      unfold bequiv. intros. rewrite Heqb. reflexivity. assumption.
+
+    *
+      apply CWhile_congruence.
+      apply trans_bequiv with (fold_constants_bexp b). apply fold_constants_bexp_sound.
+      unfold bequiv. intros. rewrite Heqb. reflexivity. assumption.
+Qed.
 
 (* ----------------------------------------------------------------- *)
 (** *** Soundness of (0 + n) Elimination, Redux *)
