@@ -494,12 +494,35 @@ Proof.
     apply Hx.
 Qed.
 
+
 (** **** Exercise: 2 stars, standard, recommended (assign_aequiv)  *)
 Theorem assign_aequiv : forall (x : string) e,
   aequiv x e ->
   cequiv SKIP (x ::= e).
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros.
+  split; intros.
+  -
+    assert (Hx : st' =[ x ::= e ]=> (x !-> st' x ; st')).
+    apply E_Ass.
+    unfold aequiv in H.
+    symmetry.
+    apply H.
+    rewrite t_update_same in Hx.
+    inversion H0.
+    subst.
+    assumption.
+  -
+    inversion H0.
+    subst.
+    unfold aequiv in H.
+    assert (aeval st e = aeval st x).
+    symmetry.
+    apply H.
+    rewrite H1.
+    rewrite t_update_same.
+    apply E_Skip.
+    Qed.
 (** [] *)
 
 (** **** Exercise: 2 stars, standard (equiv_classes)  *)
