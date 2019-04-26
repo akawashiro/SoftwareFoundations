@@ -395,7 +395,26 @@ Theorem WHILE_true : forall b c,
     (WHILE b DO c END)
     (WHILE true DO SKIP END).
 Proof.
-  (* FILL IN HERE *) Admitted.
+  (* FILL IN HERE *)
+  intros b c Hb.
+  split.
+  -
+    intros H.
+    pose proof (WHILE_true_nonterm b c st st').
+    apply H0 in Hb.
+    apply Hb in H.
+    destruct H.
+  -
+    intros H.
+    pose proof (WHILE_true_nonterm true SKIP st st').
+    assert (bequiv true BTrue).
+    unfold bequiv.
+    simpl.
+    reflexivity.
+    apply H0 in H1.
+    apply H1 in H.
+    destruct H.
+Qed.
 (** [] *)
 
 (** A more interesting fact about [WHILE] commands is that any number
@@ -424,13 +443,33 @@ Proof.
       apply E_WhileTrue with (st' := st'0).
       assumption. assumption. assumption.
     + (* loop doesn't run *)
-      inversion H5; subst. apply E_WhileFalse. assumption.  Qed.
+      inversion H5. subst. apply E_WhileFalse. assumption.  Qed.
 
 (** **** Exercise: 2 stars, standard, optional (seq_assoc)  *)
 Theorem seq_assoc : forall c1 c2 c3,
   cequiv ((c1;;c2);;c3) (c1;;(c2;;c3)).
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros c1 c2 c3.
+  split.
+  -
+    intros H.
+    inversion H.
+    inversion H2.
+    apply E_Seq with (st' := st'1).
+    assumption.
+    apply E_Seq with (st' := st'0).
+    assumption.
+    assumption.
+  -
+    intros H.
+    inversion H.
+    inversion H5.
+    apply E_Seq with (st' := st'1).
+    apply E_Seq with (st' := st'0).
+    assumption.
+    assumption.
+    assumption.
+    Qed.
 (** [] *)
 
 (** Proving program properties involving assignments is one place
