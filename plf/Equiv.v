@@ -1535,8 +1535,44 @@ Lemma aeval_weakening : forall x st a ni,
   var_not_used_in_aexp x a ->
   aeval (x !-> ni ; st) a = aeval st a.
 Proof.
-  (* FILL IN HERE *) Admitted.
-
+  intros.
+  induction a.
+  -
+    inversion H.
+    reflexivity.
+  -
+    inversion H.
+    simpl.
+    rewrite t_update_neq.
+    *
+      reflexivity.
+    *
+      assumption.
+  -
+    simpl.
+    inversion H.
+    apply IHa1 in H2.
+    apply IHa2 in H3.
+    rewrite H2.
+    rewrite H3.
+    reflexivity.
+  -
+    simpl.
+    inversion H.
+    apply IHa1 in H2.
+    apply IHa2 in H3.
+    rewrite H2.
+    rewrite H3.
+    reflexivity.
+  -
+    simpl.
+    inversion H.
+    apply IHa1 in H2.
+    apply IHa2 in H3.
+    rewrite H2.
+    rewrite H3.
+    reflexivity.
+    Qed.
 (** Using [var_not_used_in_aexp], formalize and prove a correct version
     of [subst_equiv_property]. *)
 
@@ -1551,7 +1587,22 @@ Proof.
 Theorem inequiv_exercise:
   ~ cequiv (WHILE true DO SKIP END) SKIP.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros Contra.
+  unfold cequiv in Contra.
+  assert (forall st : state, ( st =[ SKIP ]=> st )).
+  apply E_Skip.
+  assert (( empty_st =[ SKIP ]=> empty_st )).
+  apply H.
+  specialize Contra with (st := empty_st).
+  specialize Contra with (st' := empty_st).
+  destruct Contra.
+  apply H2 in H0.
+  apply WHILE_true_nonterm in H0.
+  assumption.
+  simpl.
+  apply refl_bequiv.
+  Qed.
+
 (** [] *)
 
 (* ################################################################# *)
