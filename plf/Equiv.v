@@ -1765,11 +1765,41 @@ Definition pYX :=
 Theorem pXY_cequiv_pYX :
   cequiv pXY pYX \/ ~cequiv pXY pYX.
 Proof.
-  apply or_intror.
-  unfold not.
+  apply or_introl.
+  unfold cequiv.
   intros.
-  unfold cequiv in H.
-(* FILL IN HERE *) Admitted.
+  split.
+  -
+    intros.
+    inversion H.
+    inversion H2.
+    inversion H5.
+    subst.
+    unfold pYX.
+    apply E_Seq with (st' := (Y !-> n0; st)).
+    apply E_Havoc.
+    assert ((Y !-> n0; X !-> n; st) = (X !-> n; Y !-> n0; st)).
+    apply t_update_permute.
+    intro C.
+    inversion C.
+    rewrite H0.
+    apply E_Havoc.
+  -
+    intros.
+    inversion H.
+    inversion H2.
+    inversion H5.
+    subst.
+    unfold pXY.
+    apply E_Seq with (st' := (X !-> n0; st)).
+    apply E_Havoc.
+    assert ((X !-> n0; Y !-> n; st) = (Y !-> n; X !-> n0; st)).
+    apply t_update_permute.
+    intro C.
+    inversion C.
+    rewrite H0.
+    apply E_Havoc.
+Qed.
 (** [] *)
 
 (** **** Exercise: 4 stars, standard, optional (havoc_copy)  
