@@ -1818,7 +1818,47 @@ Definition pcopy :=
 
 Theorem ptwice_cequiv_pcopy :
   cequiv ptwice pcopy \/ ~cequiv ptwice pcopy.
-Proof. (* FILL IN HERE *) Admitted.
+Proof.
+  right.
+  intro.
+  unfold cequiv in H.
+  assert (empty_st =[ ptwice ]=> (Y !-> 1; X !-> 0; empty_st)).
+  unfold ptwice.
+  apply E_Seq with (st' := (X !-> 0)); apply E_Havoc.
+  apply H in H0.
+  unfold pcopy in H0.
+  inversion H0.
+  subst.
+  inversion H3.
+  subst.
+  inversion H6.
+  subst.
+  simpl in H7.
+  assert ((Y !-> (X !-> n) X; X !-> n) X = (Y !-> 1; X !-> 0) X).
+  rewrite H7.
+  reflexivity.
+  rewrite t_update_neq in H1.
+  rewrite t_update_eq in H1.
+  assert ((Y !-> 1; X !-> 0) X = n).
+  symmetry.
+  assumption.
+  rewrite t_update_neq in H2.
+  rewrite t_update_eq in H2.
+  symmetry in H2.
+  rewrite H2 in H7.
+  assert ((Y !-> (X !-> 0) X; X !-> 0) Y = (Y !-> 1; X !-> 0) Y).
+  rewrite H7.
+  reflexivity.
+  rewrite t_update_eq in H4.
+  rewrite t_update_eq in H4.
+  symmetry in H4.
+  rewrite t_update_eq in H4.
+  inversion H4.
+  intro C.
+  inversion C.
+  intro C.
+  inversion C.
+Qed.
 (** [] *)
 
 (** The definition of program equivalence we are using here has some
