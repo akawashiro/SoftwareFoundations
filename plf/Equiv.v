@@ -1894,7 +1894,36 @@ Definition p2 : com :=
 
 Lemma p1_may_diverge : forall st st', st X <> 0 ->
   ~ st =[ p1 ]=> st'.
-Proof. (* FILL IN HERE *) Admitted.
+Proof.
+  unfold not, p1.
+  intros.
+  remember (WHILE ~ X = 0 DO HAVOC Y;; X ::= X + 1 END)%imp as c.
+  induction H0; inversion Heqc; subst; clear Heqc.
+  -
+    unfold beval in H0.
+    simpl in H0.
+    apply negb_false_iff in H0.
+    apply beq_nat_true in H0.
+    apply H in H0.
+    assumption.
+  -
+    apply IHceval2.
+    inversion H0_.
+    subst.
+    inversion H3.
+    subst.
+    inversion H6.
+    subst.
+    simpl.
+    rewrite t_update_eq.
+    rewrite t_update_neq.
+    omega.
+    *
+      intro.
+      inversion H1.
+    *
+      reflexivity.
+Qed.
 
 Lemma p2_may_diverge : forall st st', st X <> 0 ->
   ~ st =[ p2 ]=> st'.
