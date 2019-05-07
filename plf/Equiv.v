@@ -1928,7 +1928,24 @@ Qed.
 Lemma p2_may_diverge : forall st st', st X <> 0 ->
   ~ st =[ p2 ]=> st'.
 Proof.
-(* FILL IN HERE *) Admitted.
+  unfold not, p2.
+  intros.
+  remember (WHILE ~ X = 0 DO SKIP END)%imp as c.
+  induction H0; inversion Heqc; subst; clear Heqc.
+  -
+    unfold beval in H0.
+    simpl in H0.
+    apply negb_false_iff in H0.
+    apply beq_nat_true in H0.
+    apply H in H0.
+    assumption.
+  -
+    inversion H0_.
+    subst.
+    apply IHceval2.
+    assumption.
+    reflexivity.
+Qed.
 (** [] *)
 
 (** **** Exercise: 4 stars, advanced (p1_p2_equiv)  
@@ -1937,7 +1954,39 @@ Proof.
     equivalent. *)
 
 Theorem p1_p2_equiv : cequiv p1 p2.
-Proof. (* FILL IN HERE *) Admitted.
+Proof.
+  unfold cequiv.
+  intros.
+  split.
+  -
+    intros.
+    inversion H; subst.
+    *
+      apply E_WhileFalse.
+      assumption.
+    *
+      unfold beval in H2.
+      apply negb_true_iff in H2.
+      simpl in H2.
+      apply beq_nat_false in H2.
+      apply p1_may_diverge with (st' := st') in H2 .
+      apply H2 in H.
+      destruct H.
+  -
+    intros.
+    inversion H; subst.
+    *
+      apply E_WhileFalse.
+      assumption.
+    *
+      unfold beval in H2.
+      apply negb_true_iff in H2.
+      simpl in H2.
+      apply beq_nat_false in H2.
+      apply p2_may_diverge with (st' := st') in H2 .
+      apply H2 in H.
+      destruct H.
+Qed. 
 (** [] *)
 
 (** **** Exercise: 4 stars, advanced (p3_p4_inequiv)  
