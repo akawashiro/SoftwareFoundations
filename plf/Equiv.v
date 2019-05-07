@@ -2010,27 +2010,44 @@ Theorem p3_p4_inequiv : ~ cequiv p3 p4.
 Proof.
   intro.
   unfold cequiv in H.
-  assert (empty_st =[ p3 ]=> (Z !-> 2; X !-> 0)).
+  assert ((X !-> 3) =[ p3 ]=> (Z !-> 2; X !-> 0; Z !-> 1; X !-> 3)).
   -
-    apply E_Seq with (st' := (Z !-> 1)).
+    apply E_Seq with (st' := (Z !-> 1; X !-> 3)).
     *
       apply E_Ass.
       simpl.
       reflexivity.
     *
-      apply E_Ass.
-      simpl.
-      reflexivity.
+      apply E_WhileTrue with (st' := Z !-> 2; X !-> 0; Z !-> 1; X !-> 3).
+      +
+        reflexivity.
+      +
+        apply E_Seq with (st' := X !-> 0; Z !-> 1; X !-> 3).
+        apply E_Havoc.
+        apply E_Havoc.
+      +
+        apply E_WhileFalse.
+        reflexivity.
   -
     apply H in H0.
-    unfold p3 in H0.
     inversion H0.
-    inversion H6.
     inversion H3.
     subst.
-    simpl in H15.
-    destruct H15.
-(* FILL IN HERE *) Admitted.
+    simpl in H6.
+    inversion H6.
+    subst.
+    simpl in H7.
+    assert ((Z !-> 1; X !-> 0; X !-> 3) Z = (Z !-> 2; X !-> 0; Z !-> 1; X !-> 3) Z).
+    rewrite H7.
+    reflexivity.
+    assert ((Z !-> 1; X !-> 0; X !-> 3) Z = 1).
+    apply t_update_eq.
+    assert ((Z !-> 2; X !-> 0; Z !-> 1; X !-> 3) Z = 2).
+    apply t_update_eq.
+    rewrite H2 in H1.
+    rewrite H4 in H1.
+    inversion H1.
+    Qed.
 (** [] *)
 
 (** **** Exercise: 5 stars, advanced, optional (p5_p6_equiv)  
@@ -2052,7 +2069,50 @@ Definition p6 : com :=
   (X ::= 1)%imp.
 
 Theorem p5_p6_equiv : cequiv p5 p6.
-Proof. (* FILL IN HERE *) Admitted.
+Proof.
+  unfold cequiv, p5, p6.
+  split.
+  -
+    intros.
+    remember (WHILE ~ X = 1 DO HAVOC X END)%imp as c.
+    induction H; inversion Heqc.
+    +
+      rewrite H1 in H.
+      unfold beval in H.
+      apply negb_false_iff in H.
+      simpl in H.
+      apply beq_nat_true in H.
+      assert (st =[ (X ::= 1)%imp ]=> (X !-> 1; st)).
+      apply E_Ass.
+      reflexivity.
+      assert ((X !-> 1; st) = (X !-> st X; st)).
+      rewrite H.
+      reflexivity.
+      rewrite t_update_same in H3.
+      assert (st = (X !-> 1; st)).
+      symmetry.
+      assumption.
+      rewrite H3 in H0.
+      assumption.
+    +
+      subst.
+      inversion H0.
+      subst.
+      inversion H1.
+      subst.
+      unfold beval in H6.
+      apply negb_false_iff in H6.
+      apply beq_nat_true in H6.
+      simpl in H6.
+      rewrite t_update_eq in H6.
+      subst.
+      apply E_Ass.
+      reflexivity.
+      subst.
+
+
+
+(* FILL IN HERE *) Admitted.
 (** [] *)
 
 End Himp.
