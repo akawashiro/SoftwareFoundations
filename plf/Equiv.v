@@ -2007,7 +2007,30 @@ Definition p4 : com :=
   Z ::= 1)%imp.
 
 Theorem p3_p4_inequiv : ~ cequiv p3 p4.
-Proof. (* FILL IN HERE *) Admitted.
+Proof.
+  intro.
+  unfold cequiv in H.
+  assert (empty_st =[ p3 ]=> (Z !-> 2; X !-> 0)).
+  -
+    apply E_Seq with (st' := (Z !-> 1)).
+    *
+      apply E_Ass.
+      simpl.
+      reflexivity.
+    *
+      apply E_Ass.
+      simpl.
+      reflexivity.
+  -
+    apply H in H0.
+    unfold p3 in H0.
+    inversion H0.
+    inversion H6.
+    inversion H3.
+    subst.
+    simpl in H15.
+    destruct H15.
+(* FILL IN HERE *) Admitted.
 (** [] *)
 
 (** **** Exercise: 5 stars, advanced, optional (p5_p6_equiv)  
