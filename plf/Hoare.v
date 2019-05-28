@@ -461,7 +461,7 @@ Proof.
   (* WORKED IN CLASS *)
   apply hoare_asgn.  Qed.
 
-(** Of course, what would be even more helpful is to prove this
+(** of course, what would be even more helpful is to prove this
     simpler triple:
 
       {{X < 4}} X ::= X + 1 {{X < 5}}
@@ -964,7 +964,22 @@ Example hoare_asgn_example4 :
   X ::= 1;; Y ::= 2
   {{fun st => st X = 1 /\ st Y = 2}}.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intro.
+  intros.
+  inversion H.
+  subst.
+  inversion H3.
+  inversion H6.
+  subst.
+  simpl.
+  split.
+  -
+    apply t_update_neq.
+    intro.
+    inversion H1.
+  -
+    apply t_update_eq.
+    Qed.
 (** [] *)
 
 (** **** Exercise: 3 stars, standard (swap_exercise)  
