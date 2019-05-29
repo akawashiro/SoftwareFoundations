@@ -995,16 +995,54 @@ Proof.
     your proof will want to start at the end and work back to the
     beginning of your program.)  *)
 
-Definition swap_program : com
-  (* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition swap_program : com :=
+  Z ::= X;; X ::= Y;; Y::=Z.
 
 Theorem swap_exercise :
   {{fun st => st X <= st Y}}
   swap_program
   {{fun st => st Y <= st X}}.
 Proof.
-  (* FILL IN HERE *) Admitted.
-(** [] *)
+  unfold swap_program.
+  intro.
+  intros.
+  inversion H.
+  inversion H6.
+  inversion H12.
+  subst.
+  simpl.
+  assert ((Y !-> st'1 Z; st'1) Y = st'1 Z).
+  apply t_update_eq.
+  assert ((Y !-> st'1 Z; st'1) X = st'1 X).
+  apply t_update_neq.
+  intro.
+  inversion H2.
+  rewrite H1.
+  rewrite H2.
+  inversion H9.
+  subst.
+  simpl.
+  assert ((X !-> st'0 Y; st'0) Z = st'0 Z).
+  apply t_update_neq.
+  intro.
+  inversion H4.
+  rewrite H4.
+  assert ((X !-> st'0 Y; st'0) X = st'0 Y).
+  apply t_update_eq.
+  rewrite H5.
+  inversion H3.
+  subst.
+  simpl.
+  assert ((Z !-> st X; st) Z = st X).
+  apply t_update_eq.
+  assert ((Z !-> st X; st) Y = st Y).
+  apply t_update_neq.
+  intro.
+  inversion H8.
+  rewrite H7.
+  rewrite H8.
+  assumption.
+  Qed.
 
 (** **** Exercise: 3 stars, standard (hoarestate1)  
 
