@@ -198,7 +198,10 @@ Example test_step_2 :
           (C 2)
           (C (0 + 3))).
 Proof.
-  (* FILL IN HERE *) Admitted.
+  apply ST_Plus2.
+  apply ST_Plus2.
+  apply ST_PlusConstConst.
+  Qed.
 (** [] *)
 
 End SimpleArith1.
@@ -458,8 +461,24 @@ Inductive step : tm -> tm -> Prop :=
 Theorem step_deterministic :
   deterministic step.
 Proof.
-  (* FILL IN HERE *) Admitted.
-(** [] *)
+  unfold deterministic.
+  intros.
+  generalize dependent y2.
+  induction H; intros.
+  - inversion H0; subst.
+    + reflexivity.
+    + inversion H3.
+    + inversion H4.
+  - inversion H0; subst.
+    + inversion H.
+    + rewrite (IHstep t1'0). reflexivity. assumption.
+    + inversion H3; subst. inversion H.
+  - inversion H; subst.
+    inversion H1; subst.
+    + inversion H0.
+    + inversion H5.
+    + rewrite (IHstep t2'0). reflexivity. assumption.
+ Qed.
 
 (* ================================================================= *)
 (** ** Strong Progress and Normal Forms *)

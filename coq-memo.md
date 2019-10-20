@@ -25,3 +25,14 @@ not P ===> P -> bottom
 - `eapply`
   `apply`と一緒だが`apply`を適用して決定しなかった変数を存在変数(existential variable)
   としておいておいてくれる。
+- `generalize dependent`
+  文脈で仮定した変数を再び全称量化するタクティック
+- `induction`
+  仮定に対して適用する。構造に関する帰納法
+- `rewrite`
+  - Rewrite goal with the hypothesis.
+  - Usually, it rewrite the left hand side with the right hand side.
+    But you can vice versa with `rewrite <-`
+  - Can rewrite other hypothesis `Ho` with `in Ho`.
+- We can apply a term to a proposition which is generalized by forall.
+- `subst`
