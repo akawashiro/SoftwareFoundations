@@ -1339,7 +1339,11 @@ Lemma hoare_if1_good :
     X ::= X + Y
   FI)%imp
   {{ fun st => st X = st Z }}.
-Proof. (* FILL IN HERE *) Admitted.
+Proof.
+  unfold hoare_triple.
+  intros.
+  inversion H.
+  Qed.
 
 End If1.
 
@@ -1595,6 +1599,8 @@ Definition ex1_repeat :=
 Theorem ex1_repeat_works :
   empty_st =[ ex1_repeat ]=> (Y !-> 1 ; X !-> 1).
 Proof.
+  unfold ex1_repeat.
+  unfold ceval.
   (* FILL IN HERE *) Admitted.
 
 (** Now state and prove a theorem, [hoare_repeat], that expresses an
