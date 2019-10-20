@@ -1191,8 +1191,33 @@ Theorem if_minus_plus :
   FI
   {{fun st => st Y = st X + st Z}}.
 Proof.
-  (* FILL IN HERE *) Admitted.
-(** [] *)
+  apply hoare_if.
+  -
+    eapply hoare_consequence_pre.
+    +
+      apply hoare_asgn.
+    +
+      unfold bassn.
+      unfold assn_sub.
+      unfold assert_implies.
+      unfold t_update.
+      simpl.
+      intros.
+      inversion H.
+      apply le_plus_minus.
+      apply leb_complete.
+      assumption.
+  -
+    eapply hoare_consequence_pre.
+    +
+      apply hoare_asgn.
+    +
+      unfold bassn, assn_sub, assert_implies, t_update.
+      intros.
+      simpl.
+      reflexivity.
+      Qed.
+        (** [] *)
 
 (* ----------------------------------------------------------------- *)
 (** *** Exercise: One-sided conditionals *)
