@@ -402,7 +402,28 @@ where "'[' x ':=' s ']' t" := (subst x s t).
 Inductive substi (s : tm) (x : string) : tm -> tm -> Prop :=
   | s_var1 :
       substi s x (var x) s
-  (* FILL IN HERE *)
+  | s_var2 : forall y,
+      not (is_true (eqb_string x y)) ->
+      substi s x (var y) (var y)
+  | s_abs1 : forall T t,
+      substi s x (abs x T t) (abs x T t)
+  | s_abs2 : forall y T t t',
+      not (is_true (eqb_string x y)) ->
+      substi s x t t' ->
+      substi s x (abs y T t) (abs y T t')
+  | s_app : forall t1 t2 t1' t2',
+      substi s x t1 t1' ->
+      substi s x t2 t2' ->
+      substi s x (app t1 t2) (app t1' t2')
+  | s_tru :
+      substi s x tru tru
+  | s_fal :
+      substi s x fls fls
+  | s_test : forall t1 t2 t3 t1' t2' t3',
+      substi s x t1 t1' ->
+      substi s x t2 t2' ->
+      substi s x t3 t3' ->
+      substi s x (test t1 t2 t3) (test t1' t2' t3')
 .
 
 Hint Constructors substi.
@@ -410,8 +431,113 @@ Hint Constructors substi.
 Theorem substi_correct : forall s x t t',
   [x:=s]t = t' <-> substi s x t t'.
 Proof.
-  (* FILL IN HERE *) Admitted.
-(** [] *)
+  intros.
+  split.
+  - generalize t'.
+    induction t; intros t'0 H.
+    + unfold subst in H.
+      remember (eqb_string x0 s0) as b.
+      destruct b; subst; symmetry in Heqb.
+      * apply eqb_string_true_iff in Heqb.
+        subst.
+        apply s_var1.
+      * apply eqb_string_false_iff in Heqb.
+        apply s_var2.
+        unfold not.
+        intros.
+        unfold is_true in H.
+        apply eqb_string_true_iff in H.
+        unfold not in Heqb.
+        apply Heqb in H.
+        destruct H.
+    + simpl in H.
+      subst.
+      apply s_app.
+      * apply IHt1. reflexivity.
+      * apply IHt2. reflexivity.
+    + simpl in H.
+      subst.
+      remember (eqb_string x0 s0) as b.
+      destruct b; subst; symmetry in Heqb.
+      * apply eqb_string_true_iff in Heqb.
+        subst.
+        apply s_abs1.
+      * apply eqb_string_false_iff in Heqb.
+        apply s_abs2.
+        unfold is_true.
+        apply Bool.not_true_iff_false.
+        apply eqb_string_false_iff.
+        assumption.
+        apply IHt.
+        reflexivity.
+    + subst.
+      apply s_tru.
+    + subst.
+      apply s_fal.
+    + subst.
+      apply s_test.
+      * apply IHt1.
+        reflexivity.
+      * apply IHt2.
+        reflexivity.
+      * apply IHt3.
+        reflexivity.
+  - generalize t'.
+    induction t; intros t'0 H.
+    + inversion H.
+      * subst. simpl.
+        assert (eqb_string s0 s0 = true).
+        symmetry.
+        apply eqb_string_refl.
+        rewrite H0.
+        reflexivity.
+        * unfold is_true in H1.
+          apply Bool.not_true_iff_false in H1.
+          unfold subst.
+          rewrite H1.
+          reflexivity.
+    + inversion H.
+      apply IHt1 in H2.
+      apply IHt2 in H4.
+      unfold subst.
+      fold subst.
+      rewrite H2.
+      rewrite H4.
+      reflexivity.
+    + inversion H.
+      * subst.
+      unfold subst.
+      fold subst.
+         assert (eqb_string s0 s0 = true).
+        symmetry.
+        apply eqb_string_refl.
+        rewrite H0.
+        reflexivity.
+      * subst.
+      unfold subst.
+      fold subst.
+        unfold is_true in H4.
+        apply Bool.not_true_iff_false in H4.
+        rewrite H4.
+        apply IHt in H5.
+        rewrite H5.
+        reflexivity.
+    + inversion H.
+      simpl.
+      reflexivity.
+    + inversion H.
+      simpl.
+      reflexivity.
+    + inversion H.
+      subst.
+      unfold subst.
+      fold subst.
+      apply IHt1 in H3.
+      apply IHt2 in H5.
+      apply IHt3 in H6.
+      rewrite H3, H5, H6.
+      reflexivity.
+      Qed.
 
 (* ================================================================= *)
 (** ** Reduction *)

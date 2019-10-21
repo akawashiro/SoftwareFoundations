@@ -42,3 +42,6 @@ not P ===> P -> bottom
   Case analysis on a term which is defined using algebraic data type.
 - `exists` `term`
   Tell the coq to use `term` in a proposition with existential.
+- `destruct` `boolean`
+  Case analysis on `boolean`
+- `unfold`と`fold`を使って関数をちょっと展開して計算した後に畳み込み直せる
