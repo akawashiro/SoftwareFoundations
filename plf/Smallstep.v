@@ -661,7 +661,18 @@ Inductive step : tm -> tm -> Prop :=
 Lemma value_not_same_as_normal_form :
   exists v, value v /\ ~ normal_form step v.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  exists (C 0).
+  split.
+  - apply v_const.
+  - unfold normal_form.
+    unfold not.
+    intros.
+    assert (exists t': tm, C 0 --> t').
+    exists (P (C 0) (C 0)).
+    apply ST_Funny.
+    apply H in H0.
+    destruct H0.
+    Qed.
 
 End Temp2.
 (** [] *)

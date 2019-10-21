@@ -36,3 +36,9 @@ not P ===> P -> bottom
   - Can rewrite other hypothesis `Ho` with `in Ho`.
 - We can apply a term to a proposition which is generalized by forall.
 - `subst`
+- Want to know the type of the word under the cursor
+  `SPC m ?`
+- `destruct`
+  Case analysis on a term which is defined using algebraic data type.
+- `exists` `term`
+  Tell the coq to use `term` in a proposition with existential.
