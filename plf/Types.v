@@ -181,7 +181,21 @@ Hint Unfold stuck.
 Example some_term_is_stuck :
   exists t, stuck t.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  exists (iszro fls).
+  unfold stuck.
+  split.
+  unfold step_normal_form.
+  unfold not.
+  intros.
+  inversion H.
+  inversion H0.
+  inversion H2.
+  unfold not.
+  intros.
+  inversion H.
+  inversion H0.
+  inversion H0.
+  Qed.
 (** [] *)
 
 (** However, although values and normal forms are _not_ the same in
@@ -193,7 +207,31 @@ Proof.
 Lemma value_is_nf : forall t,
   value t -> step_normal_form t.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  unfold step_normal_form, not.
+  intros.
+  inversion H.
+  - inversion H1.
+    subst.
+    inversion H0.
+    inversion H2.
+    subst.
+    inversion H0.
+    inversion H2.
+  - induction t; inversion H1.
+    + inversion H0.
+      inversion H2.
+    + subst.
+      inversion H0.
+      inversion H2.
+      assert (value t).
+      apply or_intror.
+      assumption.
+      apply IHt.
+      assumption.
+      exists t1'.
+      assumption.
+      assumption.
+      Qed.
 
 (** (Hint: You will reach a point in this proof where you need to
     use an induction to reason about a term that is known to be a
