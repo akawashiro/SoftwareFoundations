@@ -47,3 +47,5 @@ not P ===> P -> bottom
 - `unfold`と`fold`を使って関数をちょっと展開して計算した後に畳み込み直せる
 - `SPC m p`
   Print the definition
+- `C-c C-a C-a`
+  SearchAbout
