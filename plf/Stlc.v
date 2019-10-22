@@ -729,13 +729,15 @@ Lemma step_example5 :
        app (app idBBBB idBB) idB
   -->* idB.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  normalize.
+  Qed.
 
 Lemma step_example5_with_normalize :
        app (app idBBBB idBB) idB
   -->* idB.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  normalize.
+  Qed.
 (** [] *)
 
 (* ################################################################# *)
@@ -868,7 +870,17 @@ Example typing_example_2_full :
           (app (var y) (app (var y) (var x))))) \in
     (Arrow Bool (Arrow (Arrow Bool Bool) Bool)).
 Proof.
-  (* FILL IN HERE *) Admitted.
+  apply T_Abs.
+  apply T_Abs.
+  eapply T_App.
+  apply T_Var.
+  reflexivity.
+  eapply T_App.
+  apply T_Var.
+  reflexivity.
+  apply T_Var.
+  reflexivity.
+  Qed.
 (** [] *)
 
 (** **** Exercise: 2 stars, standard (typing_example_3)  
