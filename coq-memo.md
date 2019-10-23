@@ -53,3 +53,8 @@ not P = P -> bottom
 - `False_ind`
   forall P. P -> bottom
 - You should induction on relation rather than induction on terms.
+- `induction` forget some information on structured parameters
+  Keep the information with `remember (condition) as C`
+- `apply` with binding lists
+  Use when `apply` cannot determine meta-variables in proposition.
+  `apply free_in_context with (T := T) (Gamma := empty) in H5`

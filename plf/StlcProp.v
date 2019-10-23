@@ -315,7 +315,50 @@ Corollary typable_empty__closed : forall t T,
     empty |- t \in T  ->
     closed t.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros.
+  remember empty as G in H.
+  induction H; subst.
+  - inversion H.
+  - unfold closed, not.
+    intros.
+    apply T_Abs in H.
+    apply free_in_context with (T := (Arrow T11 T12)) (Gamma := empty) in H0.
+    + inversion H0.
+      inversion H1.
+    + assumption.
+  - unfold closed, not.
+    intros.
+    inversion H1; subst.
+    + apply free_in_context with (T := (Arrow T11 T12)) (Gamma := empty) in H4.
+      inversion H4.
+      inversion H2.
+      assumption.
+    + apply free_in_context with (T := T11) (Gamma := empty) in H4.
+      inversion H4.
+      inversion H2.
+      assumption.
+  - unfold closed, not.
+    intros.
+    inversion H.
+  - unfold closed, not.
+    intros.
+    inversion H.
+  - unfold closed, not.
+    intros.
+    inversion H2; subst.
+    + apply free_in_context with (T := Bool) (Gamma := empty) in H5.
+      inversion H5.
+      inversion H3.
+      assumption.
+    + apply free_in_context with (T := T) (Gamma := empty) in H5.
+      inversion H5.
+      inversion H3.
+      assumption.
+    + apply free_in_context with (T := T) (Gamma := empty) in H5.
+      inversion H5.
+      inversion H3.
+      assumption.
+Qed.
 (** [] *)
 
 (** Sometimes, when we have a proof of some typing relation
