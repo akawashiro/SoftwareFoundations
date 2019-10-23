@@ -624,7 +624,24 @@ Proof with auto.
       + (* ST_TestFls *) assumption.
       + (* ST_Test *) apply T_Test; try assumption.
         apply IHHT1; assumption.
-    (* FILL IN HERE *) Admitted.
+    - inversion HE; subst.
+      apply T_Scc.
+      apply IHHT.
+      assumption.
+    - inversion HE; subst.
+      + apply T_Zro.
+      + inversion HT.
+        assumption.
+      + apply T_Prd.
+        apply IHHT.
+        assumption.
+    - inversion HE; subst.
+      + apply T_Tru.
+      + apply T_Fls.
+      + apply T_Iszro.
+        apply IHHT.
+        assumption.
+Qed.
 (** [] *)
 
 (** **** Exercise: 3 stars, advanced (finish_preservation_informal)  
