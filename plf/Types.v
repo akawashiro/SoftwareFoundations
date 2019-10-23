@@ -251,6 +251,42 @@ Proof.
 Theorem step_deterministic:
   deterministic step.
 Proof with eauto.
+  unfold deterministic.
+  intros.
+  generalize dependent y1.
+  generalize dependent y2.
+  induction x; intros.
+  - inversion H.
+  - inversion H.
+  - inversion H; inversion H0; subst...
+    + inversion H6.
+    + inversion H9.
+    + inversion H6.
+    + inversion H9.
+    + inversion H5.
+    + inversion H5.
+      +
+      assert (t1' = t1'0).
+      apply IHx1; assumption.
+      subst.
+      reflexivity.
+  - inversion H0.
+  - inversion H0.
+    inversion H.
+    subst.
+    assert (t1'0 = t1').
+    apply IHx; assumption.
+    subst. reflexivity.
+  - inversion H0; inversion H; subst.
+    + reflexivity.
+    + inversion H.
+      reflexivity.
+      inversion H2.
+    + inversion H4.
+    + inversion H5.
+    + inversion H4.
+      reflexivity.
+    + 
   (* FILL IN HERE *) Admitted.
 (** [] *)
 
