@@ -51,3 +51,6 @@ not P ===> P -> bottom
   SearchAbout
 - `Proof with auto` or `Proof with eauto`
   証明の最初の部分を Proof ではなく Proof with (tactic) で始めると、証明の本体部分でタクティックの後に . と書く代わりに ... と書くことで、そのタクティックで生成されたサブゴールすべてを tactic で解くようにすることができます（解けなかった場合には失敗します）。 
+- `False_ind`
+  forall P. P -> bottom
+- You should induction on relation rather than induction on terms.

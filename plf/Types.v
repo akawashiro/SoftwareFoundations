@@ -283,15 +283,81 @@ Proof with eauto.
     inversion H.
     + reflexivity.
     + inversion H1.
-  - induction H.
-    + intros.
+  - intros.
+    inversion H0.
+    + reflexivity.
+    + inversion H2.
+      assert (value t1).
+      * unfold value.
+        right.
+        assumption.
+      * apply value_is_nf in H7.
+        unfold step_normal_form in H7.
+        apply False_ind.
+        apply H7.
+        exists t1'0.
+        assumption.
+  - intros.
+    inversion H0.
+    + subst.
       inversion H.
-      * reflexivity.
-      * inversion H1.
-        inversion H4.
-    + intros.
-      assert (scc y1 = scc t).
-      * apply IHnvalue.
+    + subst.
+      inversion H.
+      assert (value y1).
+      * unfold value.
+        right.
+        assumption.
+      * apply value_is_nf in H5.
+        unfold step_normal_form in H5.
+        apply False_ind.
+        apply H5.
+        exists t1'0.
+        assumption.
+    + subst.
+      assert (t1'0 = t1').
+      apply IHstep.
+      * assumption.
+      * subst.
+        reflexivity.
+  - intros.
+    inversion H.
+    + reflexivity.
+    + inversion H1.
+  - intros.
+    inversion H0.
+    + reflexivity.
+    + inversion H2.
+      assert (value t1).
+      * unfold value.
+        right.
+        assumption.
+      * apply value_is_nf in H7.
+        unfold step_normal_form in H7.
+        apply False_ind.
+        apply H7.
+        exists t1'0.
+        assumption.
+  - intros.
+    inversion H0; subst.
+    + inversion H.
+    + inversion H.
+      assert (value t0).
+      * unfold value.
+        right.
+        assumption.
+      * apply value_is_nf in H5.
+        unfold step_normal_form in H5.
+        apply False_ind.
+        apply H5.
+        exists t1'0.
+        assumption.
+    + inversion H0.
+      assert (t1'0 = t1').
+      apply IHstep.
+      assumption.
+      subst.
+      reflexivity.
+Qed.
 (** [] *)
 
 (* ================================================================= *)
