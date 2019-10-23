@@ -5,30 +5,29 @@ S n = 0
 ```
   If you use `inversion` for this, it reduce to contradiction and goal is proved.
 - `unfold`
-  Unfold
+  Unfold definition.
 ```coq
-not P ===> P -> bottom
+not P = P -> bottom
 ```
 - `split`
-  splitはandのみではなく、コンストラクタがC : X1 -> X2 -> .. -> Xn ->
-  Pという形の任意のゴールPに対して扱うことができ、X1, X2, ..,
-  Xnの証明を与えることでPを証明してくれます。
+  You can use `split` tactics not only `and` but also a goal constructed with
+  `C` of type `X1 -> X2 -> ... -> Xn -> P`. In that case, you can prove `P`
+  by prove `X1, X2, ..., Xn`.
 - `left`, `right`
   left, rightはorのみではなく、2つのコンストラクタC : X1 -> X2 -> .. -> Xn ->
   PとD : Y1 -> Y2 -> .. -> Ym -> P からなる任意のゴールPに対して扱うことができ、
   leftの場合は1つめのコンストラクタ、rightの場合は2つめのコンストラクタのすべて
   の引数について証明を行うことで、ゴールPを証明できます。
 - SPC m s
-  定理を探す
-  二文字では検索できないらしい?
-  記号で検索したいな
+  Find a theorem.
+  - I want to seach by symbols.
 - `eapply`
   `apply`と一緒だが`apply`を適用して決定しなかった変数を存在変数(existential variable)
   としておいておいてくれる。
 - `generalize dependent`
-  文脈で仮定した変数を再び全称量化するタクティック
+  Generalize a variable which is declared in hypothesis.
 - `induction`
-  仮定に対して適用する。構造に関する帰納法
+  Induction on structures. Apply on hypothesis or variable.
 - `rewrite`
   - Rewrite goal with the hypothesis.
   - Usually, it rewrite the left hand side with the right hand side.
@@ -42,7 +41,7 @@ not P ===> P -> bottom
   Case analysis on a term which is defined using algebraic data type.
 - `exists` `term`
   Tell the coq to use `term` in a proposition with existential.
-- `destruct` `boolean`
+- `destruct boolean`
   Case analysis on `boolean`
 - `unfold`と`fold`を使って関数をちょっと展開して計算した後に畳み込み直せる
 - `SPC m p`

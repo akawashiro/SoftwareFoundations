@@ -465,7 +465,10 @@ Example scc_hastype_nat__hastype_nat : forall t,
   |- scc t \in Nat ->
   |- t \in Nat.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros.
+  inversion H.
+  assumption.
+  Qed.
 (** [] *)
 
 (* ----------------------------------------------------------------- *)
@@ -523,7 +526,36 @@ Proof with auto.
     + (* t1 can take a step *)
       inversion H as [t1' H1].
       exists (test t1' t2 t3)...
-  (* FILL IN HERE *) Admitted.
+  - inversion IHHT.
+    + left.
+      unfold value.
+      right.
+      apply nv_scc.
+      inversion H.
+      * inversion H0; subst; inversion HT.
+      * assumption.
+    + right.
+      inversion H.
+      exists (scc x)...
+  - right.
+    inversion IHHT.
+    + inversion H.
+      * inversion H0; subst; inversion HT.
+      * inversion H0.
+        exists zro...
+        exists t...
+    + inversion H.
+      exists (prd x)...
+  - right.
+    inversion IHHT.
+    inversion H.
+    * inversion H0; subst; inversion HT.
+    * inversion H0; subst.
+    + exists tru...
+    + exists fls...
+      * inversion H.
+        exists (iszro x)...
+        Qed.
 (** [] *)
 
 (** **** Exercise: 3 stars, advanced (finish_progress_informal)  
