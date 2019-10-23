@@ -255,39 +255,43 @@ Proof with eauto.
   intros.
   generalize dependent y1.
   generalize dependent y2.
-  induction x; intros.
-  - inversion H.
-  - inversion H.
-  - inversion H; inversion H0; subst...
-    + inversion H6.
-    + inversion H9.
-    + inversion H6.
-    + inversion H9.
-    + inversion H5.
-    + inversion H5.
-      +
-      assert (t1' = t1'0).
-      apply IHx1; assumption.
+  intros y2 H.
+  induction H.
+  - intros.
+    inversion H.
+    + reflexivity.
+    + inversion H4.
+  - intros.
+    inversion H.
+    + reflexivity.
+    + inversion H4.
+  - intros.
+    inversion H0; subst.
+    + inversion H.
+    + inversion H.
+    + assert (t1'0 = t1').
+      apply IHstep.
+      assumption.
       subst.
       reflexivity.
-  - inversion H0.
-  - inversion H0.
-    inversion H.
+  - intros.
+    inversion H0.
+    apply IHstep in H2.
     subst.
-    assert (t1'0 = t1').
-    apply IHx; assumption.
-    subst. reflexivity.
-  - inversion H0; inversion H; subst.
+    reflexivity.
+  - intros.
+    inversion H.
     + reflexivity.
-    + inversion H.
-      reflexivity.
-      inversion H2.
-    + inversion H4.
-    + inversion H5.
-    + inversion H4.
-      reflexivity.
-    + 
-  (* FILL IN HERE *) Admitted.
+    + inversion H1.
+  - induction H.
+    + intros.
+      inversion H.
+      * reflexivity.
+      * inversion H1.
+        inversion H4.
+    + intros.
+      assert (scc y1 = scc t).
+      * apply IHnvalue.
 (** [] *)
 
 (* ================================================================= *)
