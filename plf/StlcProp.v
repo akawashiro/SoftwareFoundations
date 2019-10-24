@@ -667,7 +667,17 @@ Proof.
   intros t t' T Hhas_type Hmulti. unfold stuck.
   intros [Hnf Hnot_val]. unfold normal_form in Hnf.
   induction Hmulti.
-  (* FILL IN HERE *) Admitted.
+  - apply progress in Hhas_type.
+    inversion Hhas_type.
+    + apply Hnot_val in H.
+      assumption.
+    + apply Hnf in H.
+      assumption.
+  - apply IHHmulti.
+    + apply preservation with (t := x0); assumption.
+    + assumption.
+    + assumption.
+      Qed.
 (** [] *)
 
 (* ################################################################# *)
@@ -683,7 +693,39 @@ Theorem unique_types : forall Gamma e T T',
   Gamma |- e \in T' ->
   T = T'.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros.
+  generalize dependent T'.
+  induction H.
+  - intros.
+    inversion H0; subst.
+    assert (Some T = Some T').
+    rewrite <- H.
+    rewrite <- H3.
+    reflexivity.
+    inversion H1.
+    reflexivity.
+  - intros.
+    inversion H0; subst.
+    apply IHhas_type in H6.
+    subst.
+    reflexivity.
+  - intros.
+    inversion H1; subst.
+    apply IHhas_type1 in H5.
+    inversion H5.
+    reflexivity.
+  - intros.
+    inversion H0.
+    reflexivity.
+  - intros.
+    inversion H0.
+    reflexivity.
+  - intros.
+    inversion H2.
+    subst.
+    apply IHhas_type2 in H9.
+    assumption.
+    Qed.
 (** [] *)
 
 (* ################################################################# *)
