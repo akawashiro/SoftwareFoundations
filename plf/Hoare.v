@@ -1573,6 +1573,15 @@ Inductive ceval : state -> com -> state -> Prop :=
       st  =[ c ]=> st' ->
       st' =[ WHILE b DO c END ]=> st'' ->
       st  =[ WHILE b DO c END ]=> st''
+  | E_RepeatTrue : forall st st' e b,
+      st =[ e ]=> st' ->
+      beval st' b = true ->
+      st =[ REPEAT e UNTIL b END ]=> st'
+  | E_RepeatFalse : forall st st' st'' e b,
+      st =[ e ]=> st' ->
+      beval st' b = false ->
+      st' =[ REPEAT e UNTIL b END ]=> st'' ->
+      st =[ REPEAT e UNTIL b END ]=> st''
 (* FILL IN HERE *)
 
 where "st '=[' c ']=>' st'" := (ceval st c st').
@@ -1600,8 +1609,14 @@ Theorem ex1_repeat_works :
   empty_st =[ ex1_repeat ]=> (Y !-> 1 ; X !-> 1).
 Proof.
   unfold ex1_repeat.
-  unfold ceval.
-  (* FILL IN HERE *) Admitted.
+  apply E_RepeatTrue.
+  - apply E_Seq with (st' := (X !-> 1)).
+    + apply E_Ass.
+      auto.
+    + apply E_Ass.
+      auto.
+  - auto.
+    Qed.
 
 (** Now state and prove a theorem, [hoare_repeat], that expresses an
     appropriate proof rule for [repeat] commands.  Use [hoare_while]
