@@ -1898,12 +1898,37 @@ Theorem assert_assume_differ : exists P b Q,
        ({{P}} ASSUME b {{Q}})
   /\ ~ ({{P}} ASSERT b {{Q}}).
 Proof.
-(* FILL IN HERE *) Admitted.
+  exists (fun st => True).
+  exists false.
+  exists (fun st => True).
+  unfold hoare_triple.
+  split.
+  - intros.
+    inversion H.
+    subst.
+    inversion H2.
+  - unfold not.
+    intro.
+    specialize (H empty_st RError).
+    assert (empty_st =[ ASSERT false ]=> RError).
+    + apply E_AssertFalse.
+      reflexivity.
+    + apply H in H0.
+      inversion H0.
+      destruct H1.
+      inversion H1.
+      apply I.
+      Qed.
 
 Theorem assert_implies_assume : forall P b Q,
      ({{P}} ASSERT b {{Q}})
   -> ({{P}} ASSUME b {{Q}}).
 Proof.
+  unfold hoare_triple.
+  intros.
+  apply H.
+  unfold hoare_triple in H.
+  intros.
 (* FILL IN HERE *) Admitted.
 
 (** Your task is now to state Hoare rules for [ASSERT] and [ASSUME],
