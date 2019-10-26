@@ -1926,9 +1926,6 @@ Theorem assert_implies_assume : forall P b Q,
 Proof.
   unfold hoare_triple.
   intros.
-  apply H.
-  unfold hoare_triple in H.
-  intros.
 (* FILL IN HERE *) Admitted.
 
 (** Your task is now to state Hoare rules for [ASSERT] and [ASSUME],
