@@ -10,6 +10,7 @@ From Coq Require Import Arith.PeanoNat. Import Nat.
 From Coq Require Import omega.Omega.
 From PLF Require Import Hoare.
 From PLF Require Import Imp.
+Require Import Arith Wf.
 
 (* ################################################################# *)
 (** * Decorated Programs *)
@@ -669,6 +670,64 @@ Proof.
     exfalso. apply H. omega.
 Qed.
 
+Theorem nat_compind
+  (P : nat -> Prop)
+  (H : forall n : nat, (forall k : nat, k < n -> P k) -> P n)
+  (n : nat)
+  : P n.
+Proof.
+  generalize dependent n.
+  assert (forall n : nat, forall k : nat, k <= n -> P k).
+  - induction n.
+    + intros k Hk.
+      apply (le_n_0_eq k) in Hk.
+      subst.
+      apply (H 0).
+      intros k Hk.
+      exfalso.
+      exact (lt_n_0 k Hk).
+    + intros k Hk.
+      apply (H k).
+      intros l Hl.
+      apply (IHn l).
+      apply (lt_le_S l k) in Hl.
+      apply le_S_n.
+      exact (le_trans (S l) k (S n) Hl Hk).
+  - intros n.
+    apply (H0 n n).
+    exact (le_refl n).
+Qed.
+
+Lemma parity_correct_case0 :
+    {{fun st : state => st X = 0}} WHILE 2 <= X DO X ::= X - 2 END {{fun st : state => st X = parity 0}}.
+Proof.
+    unfold hoare_triple.
+    intros.
+    inversion H;subst.
+    + rewrite H0.
+      reflexivity.
+    +
+      unfold beval in H3.
+      simpl in H3.
+      rewrite H0 in H3.
+      inversion H3.
+Qed.
+
+Lemma parity_correct_case1 :
+    {{fun st : state => st X = 1}} WHILE 2 <= X DO X ::= X - 2 END {{fun st : state => st X = parity 1}}.
+Proof.
+    unfold hoare_triple.
+    intros.
+    inversion H;subst.
+    + rewrite H0.
+      reflexivity.
+    +
+      unfold beval in H3.
+      simpl in H3.
+      rewrite H0 in H3.
+      inversion H3.
+Qed.
+
 Theorem parity_correct : forall m,
     {{ fun st => st X = m }}
   WHILE 2 <= X DO
@@ -676,7 +735,72 @@ Theorem parity_correct : forall m,
   END
     {{ fun st => st X = parity m }}.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  apply nat_compind.
+  intros.
+  induction n.
+  apply parity_correct_case0.
+  unfold hoare_triple.
+  intros.
+  inversion H0; subst.
+  -
+    unfold beval in H6.
+    apply leb_gt in H6.
+    simpl in H6.
+    rewrite H1 in H6.
+    rewrite H1.
+    inversion H6.
+    reflexivity.
+    inversion H3.
+    inversion H5.
+  -
+    unfold beval in H4.
+    apply leb_le in H4.
+    simpl in H4.
+    inversion H5; subst.
+    inversion H6.
+    rewrite H1.
+    simpl.
+
+
+
+    unfold beval in H6.
+    apply leb_gt in H6.
+    simpl in H6.
+    inversion H6.
+    +
+      rewrite H2.
+      reflexivity.
+    +
+      inversion H2.
+      *
+        rewrite H4.
+        reflexivity.
+      *
+        inversion H4.
+  -
+    unfold beval in H4.
+    apply leb_le in H4.
+    simpl in H4.
+    inversion H4.
+    +
+      inversion H5; subst.
+      inversion H8; subst.
+      * simpl.
+        rewrite <- H2.
+        simpl.
+        apply t_update_eq.
+      *
+        inversion H7; subst.
+        simpl in H11.
+        rewrite <- H2 in H11.
+        simpl in H11.
+        inversion H11; subst.
+        apply t_update_eq.
+        inversion H9.
+    +
+      inversion H5; subst.
+      inversion H8; subst.
+      * simpl.
 (** [] *)
 
 (* ================================================================= *)
