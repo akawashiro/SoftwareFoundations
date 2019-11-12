@@ -714,7 +714,7 @@ Proof.
 Qed.
 
 Lemma parity_correct_case1 :
-    {{fun st : state => st X = 1}} WHILE 2 <= X DO X ::= X - 2 END {{fun st : state => st X = parity 1}}.
+      {{fun st : state => st X = 1}} WHILE 2 <= X DO X ::= X - 2 END {{fun st : state => st X = parity 1}}.
 Proof.
     unfold hoare_triple.
     intros.
@@ -753,54 +753,27 @@ Proof.
     inversion H3.
     inversion H5.
   -
-    unfold beval in H4.
-    apply leb_le in H4.
-    simpl in H4.
     inversion H5; subst.
-    inversion H6.
-    rewrite H1.
-    simpl.
-
-
-
-    unfold beval in H6.
-    apply leb_gt in H6.
-    simpl in H6.
-    inversion H6.
-    +
-      rewrite H2.
-      reflexivity.
-    +
-      inversion H2.
+    simpl in H8.
+    apply H with (k := st X - 2) in H8.
+    + 
+      assert ((X !-> st X - 2; st) X = st X - 2).
       *
-        rewrite H4.
-        reflexivity.
-      *
-        inversion H4.
-  -
-    unfold beval in H4.
-    apply leb_le in H4.
-    simpl in H4.
-    inversion H4.
-    +
-      inversion H5; subst.
-      inversion H8; subst.
-      * simpl.
-        rewrite <- H2.
-        simpl.
         apply t_update_eq.
       *
-        inversion H7; subst.
-        simpl in H11.
-        rewrite <- H2 in H11.
-        simpl in H11.
-        inversion H11; subst.
-        apply t_update_eq.
-        inversion H9.
+        apply H8 in H2.
+        rewrite H2.
+        rewrite H1.
+        apply parity_ge_2.
+        unfold beval in H4.
+        apply leb_le in H4.
+        simpl in H4.
+        rewrite H1 in H4.
+        assumption.
     +
-      inversion H5; subst.
-      inversion H8; subst.
-      * simpl.
+      rewrite H1.
+      omega.
+      Qed.
 (** [] *)
 
 (* ================================================================= *)
@@ -825,7 +798,7 @@ Proof.
        Z ::= 0;;
     (3)  {{ Z*Z <= m /\ m<(Z+1)*(Z+1) }}
        WHILE (Z+1)*(Z+1) <= X DO
-    (4)    {{ Z*Z<=m /\ (Z+1)*(Z+1)<=X }}  ->>             (c - WRONG!)
+  
     (5)    {{ (Z+1)*(Z+1)<=m /\ m<(Z+2)*(Z+2) }}
          Z ::= Z+1
     (6)    {{ Z*Z<=m /\ m<(Z+1)*(Z+1) }}
