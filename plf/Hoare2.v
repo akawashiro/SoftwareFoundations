@@ -1161,11 +1161,40 @@ Definition is_wp P c Q :=
    is indeed the weakest precondition of [X ::= Y + 1] with respect to
    postcondition [X <= 5]. *)
 
+
 Theorem is_wp_example :
   is_wp (fun st => st Y <= 4)
     (X ::= Y + 1) (fun st => st X <= 5).
 Proof.
-  (* FILL IN HERE *) Admitted.
+  unfold is_wp.
+  split.
+  -
+    unfold hoare_triple.
+    intros.
+    inversion H; subst.
+    simpl.
+    assert ((X !-> st Y + 1; st) X = st Y + 1).
+    apply t_update_eq.
+    rewrite H1.
+    omega.
+  -
+    unfold assert_implies.
+    intros.
+    unfold hoare_triple in H.
+    specialize H with (st := st) (st' := X !-> st Y + 1; st).
+    assert ((X !-> st Y + 1; st) X = st Y + 1).
+    apply t_update_eq.
+    assert((X !-> st Y + 1; st) X <= 5 -> st Y <= 4).
+    rewrite H1.
+    intros.
+    omega.
+    apply H2.
+    apply H.
+    apply E_Ass.
+    simpl.
+    reflexivity.
+    assumption.
+    Qed.
 (** [] *)
 
 (** **** Exercise: 2 stars, advanced, optional (hoare_asgn_weakest)  
