@@ -813,17 +813,18 @@ Proof. simpl. reflexivity.  Qed.
     function.  (It can be done with just one previously defined
     function, but you can use two if you need to.) *)
 
-Definition ltb (n m : nat) : bool
-  (* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition ltb (n m : nat) : bool :=
+  (leb n m) && negb (eqb n m).
+  (* REPLACE THIS LINE WITH ":= _your_definition_ ." *)
 
 Notation "x <? y" := (ltb x y) (at level 70) : nat_scope.
 
 Example test_ltb1:             (ltb 2 2) = false.
-(* FILL IN HERE *) Admitted.
+unfold ltb. simpl. reflexivity. Qed.
 Example test_ltb2:             (ltb 2 4) = true.
-(* FILL IN HERE *) Admitted.
+unfold ltb. simpl. reflexivity. Qed.
 Example test_ltb3:             (ltb 4 2) = false.
-(* FILL IN HERE *) Admitted.
+unfold ltb.simpl. reflexivity. Qed.
 (** [] *)
 
 (* ################################################################# *)
@@ -975,7 +976,17 @@ Proof.
 Theorem plus_id_exercise : forall n m o : nat,
   n = m -> m = o -> n + m = m + o.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  induction n.
+  -
+    intros.
+    subst.
+    reflexivity.
+  -
+    intros.
+    subst.
+    reflexivity.
+    Qed.
+(* FILL IN HERE *)
 (** [] *)
 
 (** The [Admitted] command tells Coq that we want to skip trying
@@ -1007,8 +1018,8 @@ Theorem mult_S_1 : forall n m : nat,
   m = S n ->
   m * (1 + n) = m * m.
 Proof.
-  (* FILL IN HERE *) Admitted.
-
+  induction n; intros; subst; simpl; reflexivity.
+  Qed.
   (* (N.b. This proof can actually be completed with tactics other than
      [rewrite], but please do use [rewrite] for the sake of the exercise.) 
 

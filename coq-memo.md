@@ -1,3 +1,8 @@
+[Cheat Sheet](http://www.inf.ed.ac.uk/teaching/courses/tspl/cheatsheet.pdf)
+
+- destruct exists
+  If you have an hypothesis `H` using `exists`, you can destruct it with
+  `destruct H as [x H1]`.
 - `inversion`
   Destruct hypothesis.
 ```coq
@@ -62,3 +67,5 @@ not P = P -> bottom
   `apply free_in_context with (T := T) (Gamma := empty) in H5`
 - `specialize`
   You can specialize a hypothesis with forall using `specialize` tactic.
+
+
