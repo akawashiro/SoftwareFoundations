@@ -1,5 +1,8 @@
 [Cheat Sheet](http://www.inf.ed.ac.uk/teaching/courses/tspl/cheatsheet.pdf)
 
+- destruct `or`
+  You can destruct `or` in hypothesis using `destruct H as [H1 | H2]`. This
+  tactic generates two cases.
 - destruct exists
   If you have an hypothesis `H` using `exists`, you can destruct it with
   `destruct H as [x H1]`.

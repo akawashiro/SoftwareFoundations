@@ -922,14 +922,53 @@ Proof.
       apply In_map.
       assumption.
       Qed.
-(* FILL IN HERE *) Admitted.
 (** [] *)
 
 (** **** Exercise: 2 stars, standard (In_app_iff)  *)
 Lemma In_app_iff : forall A l l' (a:A),
   In a (l++l') <-> In a l \/ In a l'.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  induction l; split; simpl.
+  -
+    intros.
+    right.
+    assumption.
+  -
+    intros.
+    destruct H as [H1 | H2].
+    +
+      apply False_ind.
+      assumption.
+    +
+      assumption.
+  -
+    intros.
+    destruct H as [H1 | H2].
+    +
+      auto.
+    +
+      apply IHl in H2.
+      destruct H2 as [H21 | H22].
+      *
+        auto.
+      *
+        auto.
+  -
+    intros.
+    destruct H as [H1 | H2].
+    +
+      destruct H1 as [H11 | H12].
+      *
+        auto.
+      *
+        right.
+        apply IHl.
+        auto.
+    +
+        right.
+        apply IHl.
+        auto.
+        Qed.
 (** [] *)
 
 (** **** Exercise: 3 stars, standard, recommended (All)  
@@ -944,15 +983,43 @@ Proof.
     lemma below.  (Of course, your definition should _not_ just
     restate the left-hand side of [All_In].) *)
 
-Fixpoint All {T : Type} (P : T -> Prop) (l : list T) : Prop
-  (* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Fixpoint All {T : Type} (P : T -> Prop) (l : list T) : Prop :=
+  match l with
+  | [] => True
+  | x :: l' => P x /\ All P l'
+  end.
 
 Lemma All_In :
   forall T (P : T -> Prop) (l : list T),
     (forall x, In x l -> P x) <->
     All P l.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  induction l; simpl; split; intros; auto.
+  -
+    apply False_ind.
+    assumption.
+  -
+    split.
+    +
+      specialize (H x).
+      apply H.
+      auto.
+    +
+      apply IHl.
+      intros.
+      apply H.
+      auto.
+  -
+    destruct H0 as [H01 | H02].
+    +
+      subst.
+      destruct H as [H1 H2].
+      assumption.
+    +
+      destruct H as [H1 H2].
+      destruct IHl as [IHl1 IHl2].
+      apply IHl2; auto.
+      Qed.
 (** [] *)
 
 (** **** Exercise: 3 stars, standard (combine_odd_even)  
