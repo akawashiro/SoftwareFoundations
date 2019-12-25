@@ -1363,6 +1363,11 @@ Definition tr_rev {X} (l : list X) : list X :=
     case.  Prove that the two definitions are indeed equivalent. *)
 
 Lemma tr_rev_correct : forall X, @tr_rev X = @rev X.
+  intros.
+  unfold tr_rev.
+  apply functional_extensionality.
+  intros.
+  induction x.
 (* FILL IN HERE *) Admitted.
 (** [] *)
 
