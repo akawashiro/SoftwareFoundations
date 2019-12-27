@@ -228,16 +228,26 @@ Definition wp (c:com) (Q:Assertion) : Assertion :=
 (** **** Exercise: 1 star, standard (wp_is_precondition)  *)
 
 Lemma wp_is_precondition: forall c Q,
-  {{wp c Q}} c {{Q}}.
-(* FILL IN HERE *) Admitted.
+    {{wp c Q}} c {{Q}}.
+Proof.
+  unfold wp.
+  unfold hoare_triple.
+  intros.
+  apply H0.
+  assumption.
+  Qed.
 (** [] *)
 
 (** **** Exercise: 1 star, standard (wp_is_weakest)  *)
 
 Lemma wp_is_weakest: forall c Q P',
-   {{P'}} c {{Q}} -> forall st, P' st -> wp c Q st.
-(* FILL IN HERE *) Admitted.
-
+    {{P'}} c {{Q}} -> forall st, P' st -> wp c Q st.
+Proof.
+  unfold wp.
+  unfold hoare_triple.
+  intros.
+  apply H with (st := st); auto.
+  Qed.
 (** The following utility lemma will also be useful. *)
 
 Lemma bassn_eval_false : forall b st, ~ bassn b st -> beval st b = false.
@@ -272,9 +282,50 @@ Proof.
      eapply IHc1.
        intros st st' E1 H. unfold wp. intros st'' E2.
          eapply HT. econstructor; eassumption. assumption.
-     eapply IHc2. intros st st' E1 H. apply H; assumption.
-  (* FILL IN HERE *) Admitted.
-(** [] *)
+         eapply IHc2. intros st st' E1 H. apply H; assumption.
+  - apply H_If.
+    + eapply IHc1.
+      unfold hoare_triple.
+      intros.
+      eapply HT.
+      eapply E_IfTrue.
+      destruct H0.
+      eassumption.
+      assumption.
+      destruct H0.
+      assumption.
+    + eapply IHc2.
+      unfold hoare_triple.
+      intros.
+      eapply HT.
+      eapply E_IfFalse.
+      destruct H0.
+      apply bassn_eval_false.
+      eassumption.
+      assumption.
+      destruct H0.
+      assumption.
+  - eapply H_Consequence.
+    + eapply H_While.
+      apply IHc.
+      eapply hoare_consequence_post in HT.
+      unfold hoare_triple.
+      intros.
+      eapply hoare_while with (b:=b) (c:=c) (st' := st) in HT.
+      * destruct H0.
+        apply HT in H1.
+        destruct H1.
+      * unfold hoare_triple.
+        intros.
+      intros.
+      unfold hoare_triple in HT.
+      eapply HT.
+      eapply E_WhileTrue.
+      * destruct H0.
+        apply b0.
+      * eapply H.
+      * 
+    eapply hoare_while in HT.
 
 (** Finally, we might hope that our axiomatic Hoare logic is
     _decidable_; that is, that there is an (terminating) algorithm (a
