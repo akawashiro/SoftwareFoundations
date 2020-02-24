@@ -824,7 +824,7 @@ unfold ltb. simpl. reflexivity. Qed.
 Example test_ltb2:             (ltb 2 4) = true.
 unfold ltb. simpl. reflexivity. Qed.
 Example test_ltb3:             (ltb 4 2) = false.
-unfold ltb.simpl. reflexivity. Qed.
+unfold ltb. simpl. reflexivity. Qed.
 (** [] *)
 
 (* ################################################################# *)
@@ -1246,14 +1246,22 @@ Qed.
 Theorem andb_true_elim2 : forall b c : bool,
   andb b c = true -> c = true.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros.
+  destruct b.
+  - auto.
+  - inversion H.
+Qed.
 (** [] *)
 
 (** **** Exercise: 1 star, standard (zero_nbeq_plus_1)  *)
 Theorem zero_nbeq_plus_1 : forall n : nat,
   0 =? (n + 1) = false.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros.
+  destruct n.
+  - simpl. reflexivity.
+  - simpl. reflexivity.
+Qed.
 (** [] *)
 
 (* ================================================================= *)
@@ -1360,7 +1368,13 @@ Theorem identity_fn_applied_twice :
   (forall (x : bool), f x = x) ->
   forall (b : bool), f (f b) = b.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros.
+  assert (f b = b).
+  apply H.
+  rewrite H0.
+  rewrite H0.
+  reflexivity.
+  Qed.
 
 (** [] *)
 
@@ -1393,7 +1407,15 @@ Theorem andb_eq_orb :
   (andb b c = orb b c) ->
   b = c.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros.
+  destruct b.
+  - destruct c.
+    + reflexivity.
+    + inversion H.
+  - destruct c.
+    + inversion H.
+    + reflexivity.
+Qed.
 
 (** [] *)
 
