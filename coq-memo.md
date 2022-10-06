@@ -1,3 +1,5 @@
+Before start VSCode, you must run `make` under directory.
+
 [Cheat Sheet](http://www.inf.ed.ac.uk/teaching/courses/tspl/cheatsheet.pdf)
 
 - destruct `or`
