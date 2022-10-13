@@ -272,9 +272,18 @@ Definition quadruple : val :=
 (** Specify and verify the function [quadruple] to express that it returns
     [4*n]. Hint: follow the pattern of the previous proof. *)
 
-(* FILL IN HERE *)
+Lemma quadruple_prop : forall (n:int),
+    triple (quadruple n)
+    \[]
+    (fun r => \[r = 4*n]).
 
-(** [] *)
+Proof.
+  xwp.
+  xapp.
+  xapp.
+  xsimpl.
+  math.
+Qed.
 
 (** **** Exercise: 2 stars, standard, especially useful (triple_inplace_double) *)
 
@@ -288,12 +297,19 @@ Definition inplace_double : val :=
        let 'm = 'n + 'n in
        'p := 'm }>.
 
-(** Specify and verify the function [inplace_double]. Hint: follow the
-    pattern of the first example, namely [triple_incr]. *)
+Lemma inplace_double_prop : forall (p:loc) (n:int),
+  triple (inplace_double p)
+  (p ~~> n)
+  (fun _ => (p ~~> (2*n))).
 
-(* FILL IN HERE *)
-
-(** [] *)
+Proof.
+  xwp.
+  xapp.
+  xapp.
+  xapp.
+  xsimpl.
+  math.
+Qed.
 
 (** From here on, we use the command [Proof using] for introducing a proof
     instead of writing just [Proof]. Doing so enables asynchronous proof
