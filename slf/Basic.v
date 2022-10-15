@@ -519,13 +519,27 @@ Definition transfer : val :=
        'p := 's;
        'q := 0 }>.
 
+
 (** **** Exercise: 1 star, standard, especially useful (triple_transfer)
 
     State and prove a lemma called [triple_transfer], to specify the behavior
     of [transfer p q] in the case where [p] and [q] denote two distinct
     references. *)
 
-(* FILL IN HERE *)
+
+Lemma triple_transfer : forall (p q:loc) (n m:int),
+triple (transfer p q)
+  (p ~~> n \* q ~~> m)
+  (fun _ => p ~~> (n+m) \* q ~~> 0).
+Proof.
+xwp.
+xapp.
+xapp.
+xapp.
+xapp.
+xapp.
+xsimpl.
+Qed.
 
 (** [] *)
 
@@ -535,7 +549,19 @@ Definition transfer : val :=
     behavior of [transfer] when it is applied twice to the same argument. It
     should take the form [triple (transfer p p) _ _]. *)
 
-(* FILL IN HERE *)
+Lemma triple_transfer_aliased : forall (p q:loc) (n m:int),
+triple (transfer p p)
+  (p ~~> n)
+  (fun _ => p ~~> 0).
+Proof.
+xwp.
+xapp.
+xapp.
+xapp.
+xapp.
+xapp.
+xsimpl.
+Qed.
 
 (** [] *)
 
@@ -636,7 +662,17 @@ Qed.
     [triple_ref_greater_abstract], should be derived from [triple_ref_greater],
     following the proof pattern employed in [triple_incr_first_derived]. *)
 
-(* FILL IN HERE *)
+Lemma triple_ref_greater_abstract : forall (p:loc) (n:int), exists (m:int),
+triple (ref_greater p)
+  (p ~~> n)
+  (funloc q => p ~~> n \* q ~~> m) /\ m > n.
+Proof using.
+  intros.
+  exists (n+1).
+  split.
+  xwp. xapp. xapp. xapp. intros q. xsimpl. auto.
+  math.
+Qed.
 
 (** [] *)
 
@@ -760,7 +796,15 @@ Lemma triple_get_and_free : forall p v,
   triple (get_and_free p)
     (p ~~> v)
     (fun r => \[r = v]).
-Proof using. (* FILL IN HERE *) Admitted.
+Proof using.
+  intros.
+  xwp.
+  xapp.
+  xapp.
+  xval.
+  xsimpl.
+  auto.
+Qed.
 
 (** [] *)
 
@@ -957,6 +1001,13 @@ Definition repeat_incr : val :=
     reference [p]. Observe that this postcondition is only valid under the
     assumption that [m >= 0]. *)
 
+Lemma only_zero: forall (m:int),
+  m >= 0 -> ~ m > 0 -> m = 0.
+Proof.
+  intros.
+  math.
+Qed.
+
 Lemma triple_repeat_incr : forall (m n:int) (p:loc),
   m >= 0 ->
   triple (repeat_incr p m)
@@ -970,7 +1021,44 @@ Lemma triple_repeat_incr : forall (m n:int) (p:loc),
     [intros m. induction_wf IH: ...], but make sure to not leave [n] in the
     goal, otherwise the induction principle that you obtain is too weak. *)
 
-Proof using. (* FILL IN HERE *) Admitted.
+Proof using.
+  intro m.
+  induction_wf IH: (downto 0) m.
+  unfold downto in IH.
+  {
+    intros.
+    xwp. xapp. xif.
+    {
+      intros.
+      xapp.
+      xapp.
+      xapp.
+      {
+        math.
+      }
+      {
+        math.
+      }
+      {
+        xsimpl.
+        math.        
+      }
+    }
+    {
+     intros.
+     apply only_zero in H.
+     {
+      xval.
+      xsimpl.
+      math.
+     }
+     {
+      assumption.
+     }
+    }
+  }
+Qed.
+
 
 (** [] *)
 
