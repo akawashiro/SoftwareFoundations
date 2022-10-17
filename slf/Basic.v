@@ -1199,6 +1199,15 @@ Proof using.
       {
         xsimpl.
         simpl.
+        rewrite max_0_m_minus_1.
+        {
+          rewrite max_0_m.
+          math.
+          assumption. 
+        }
+        {
+          assumption.          
+        }
       }
     }
     {
@@ -1208,6 +1217,7 @@ Proof using.
      rewrite max_0_m_less_than_zero.
      {
       simpl.
+      math.
      }
      {
       math.
@@ -1261,7 +1271,41 @@ Lemma triple_step_transfer : forall p q n m,
     Hint: to set up the induction, follow the pattern shown in
     the proof of [triple_repeat_incr']. *)
 
-Proof using. (* FILL IN HERE *) Admitted.
+    Proof using.
+    intros p q n m.
+    revert p q n.
+    induction_wf IH: (downto 0) m.
+    unfold downto in IH.
+    intros.
+    xwp.
+    xapp.
+    xapp.
+    xif.
+    {
+      intros.
+      xapp.
+      xapp.
+      xapp.
+      {
+       math. 
+      }
+      {
+        math.
+      }
+      {
+        xsimpl.
+        math.
+      }
+    }
+    {
+      intros.
+      xval.
+      xsimpl.
+      math.
+      math.
+    } 
+  Qed.
+  
 
 (** [] *)
 
