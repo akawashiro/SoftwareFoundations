@@ -1149,11 +1149,72 @@ Proof using. introv M. unfold max. case_if; math. Qed.
     Prove the general specification for the function [repeat_incr], covering
     also the case [m < 0]. *)
 
+Lemma max_0_m_minus_1 : forall (m: int),
+  m > 0 -> max 0 (m - 1) = m - 1.
+Proof using.
+   intros.
+   apply max_r.
+   math.
+Qed.
+
+Lemma max_0_m : forall (m: int),
+  m > 0 -> max 0 m = m.
+  Proof using.
+  intros.
+  apply max_r.
+  math.
+Qed.
+
+Lemma max_0_m_less_than_zero : forall (m: int),
+  m <= 0 -> max 0 m = 0.
+  Proof using.
+  intros.
+  apply max_l.
+  math.
+Qed.
+
 Lemma triple_repeat_incr' : forall (p:loc) (n m:int),
   triple (repeat_incr p m)
     (p ~~> n)
     (fun _ => p ~~> (n + max 0 m)).
-Proof using. (* FILL IN HERE *) Admitted.
+Proof using.
+  intros.
+  revert p.
+  revert n.
+  induction_wf IH: (downto 0) m.
+  unfold downto in IH.
+  intros.
+  xwp.
+  {
+    xapp.
+    xif.
+    {
+      intros.
+      xapp.
+      xapp.
+      xapp.
+      {
+        math.
+      }
+      {
+        xsimpl.
+        simpl.
+      }
+    }
+    {
+     intros.
+     xval.
+     xsimpl.
+     rewrite max_0_m_less_than_zero.
+     {
+      simpl.
+     }
+     {
+      math.
+     }
+    }
+  }
+Qed.
 
 (** [] *)
 
